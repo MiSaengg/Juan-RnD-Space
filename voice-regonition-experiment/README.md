@@ -1,38 +1,104 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## JUAN's R&D SPACE
 
-First, run the development server:
+##  VOICE RECOGNITION
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+<details>
+<summary><h4>React-Speech-Recognition</h4></summary>
+
+## React-Speech-Recognition
+A React hook that converts speech from the microphone to text and makes it available to your React components.
+
+How it works
+useSpeechRecognition is a React hook that gives a component access to a transcript of speech picked up from the user's microphone. SpeechRecognition manages the global state of the Web Speech API, exposing functions to turn the microphone on and off. Under the hood, it uses Web Speech API. Note that browser support for this API is currently limited, with Chrome having the best experience - see supported browsers for more information. This version requires React 16.8 so that React hooks can be used. If you're used to version 2.x of react-speech-recognition or want to use an older version of React, you can see the old README here. If you want to migrate to version 3.x, see the migration guide here. [npm link] (https://github.com/zihangdai/xlnet)
+
+Installation
+To install:
+```sh
+npm install --save react-speech-recognition
+```
+To import in your React code:
+```sh
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
+```
+Basic Example
+The most basic example of a component using this hook would be:
+```sh
+import React from 'react';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+
+const Dictaphone = () => {
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
+
+  if (!browserSupportsSpeechRecognition) {
+    return <span>Browser doesn't support speech recognition.</span>;
+  }
+
+  return (
+    <div>
+      <p>Microphone: {listening ? 'on' : 'off'}</p>
+      <button onClick={SpeechRecognition.startListening}>Start</button>
+      <button onClick={SpeechRecognition.stopListening}>Stop</button>
+      <button onClick={resetTranscript}>Reset</button>
+      <p>{transcript}</p>
+    </div>
+  );
+};
+export default Dictaphone;
+```
+</details>
+
+<details>
+<summary><h4>Problem Encountered</h4></summary>
+
+## Problem Encountered 1
+
+Error occurred while rendering the code above using Next.js framework. According to Next.js documentation, this issue is caused by using a specific library or application code that is relying on something that could differ between pre-rendering and the browser. [Next.js documentation Link] (https://nextjs.org/docs/messages/react-hydration-error) In order to fix the problem, I added 'useEffect' and 'useState' hooks.
+
+Added code snippets:
+```sh
+import { useEffect, useState } from 'react'
+```
+```sh
+const [listening, setListening] = useState(false)
+useEffect(() => setListening(true), [])
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Problem Encountered 2
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+By default, the microphone stop listening when the user stops speaking. This may be a problem for someone who want the microphone to listen continuously. The code snippet below can make the microphone to continue listening even after the user has stopped speaking.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+```sh
+const startListening = () => SpeechRecognition.startListening({ continuous: true });
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+# Problem Encountered 3
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+The microphone can pick up multiple languages including Korean. However, this presents an issue because when a user says "Hi" in English, it prints out "하이", which is Korean. As a result, it makes hard for a user to switch between speaking Korean and English.
 
-## Learn More
+![Captuer Image](https://google.com)
 
-To learn more about Next.js, take a look at the following resources:
+In order to solve this issue, the language is set to English for this project.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+</details>
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+<details>
+<summary><h4>Things to consider before implmenting</h4></summary>
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+A. Is there a better way to convert text to speech?
+B. In terms of performance, there are better speech recognition tools such as the AudioGPT(Recently released).
+
+
+Q. What is the API is not supported by a web browser?
+A. As of 2021, the API is supported by all major web browsers except IE and Opera. No need to worry.
+
+
+
+
